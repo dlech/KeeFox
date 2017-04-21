@@ -149,7 +149,20 @@ var keeFoxDialogManager = {
         }
         return this.__composeBundle;
     },
-    
+
+    __chatBundle : null, // string bundle for thunderbird l10n
+    get _chatBundle() {    
+        if (!this.__chatBundle) {
+            var bunService = Components.classes["@mozilla.org/intl/stringbundle;1"].
+                getService(Components.interfaces.nsIStringBundleService);
+            this.__chatBundle = bunService.createBundle(
+                "chrome://chat/locale/accounts.properties");
+            if (!this.__chatBundle)
+                throw "Chat Message string bundle not present!";
+        }
+        return this.__chatBundle;
+    },
+
     appInfo: Components.classes["@mozilla.org/xre/app-info;1"]
         .getService(Components.interfaces.nsIXULAppInfo),
     
@@ -338,6 +351,8 @@ var keeFoxDialogManager = {
                     "enterUserPassGroup", "%2$S", "%1$S");
                 LoadDialogData(this._messengerBundle, "mail", "passwordTitle",
                     "passwordPrompt", "%2$S", null, "%1$S");
+                LoadDialogData(this._chatBundle, "chat", "passwordPromptTitle",
+                    "passwordPromptText", "%S", null, null, true);
                 
                 for (let type in titles)
                 {                  
